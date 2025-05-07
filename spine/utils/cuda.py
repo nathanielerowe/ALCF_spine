@@ -4,6 +4,7 @@ import os
 
 import torch
 
+import intel_extension_for_pytorch as ipex
 
 def set_visible_devices(gpus=None, world_size=None, **kwargs):
     """Sets the number of visible CUDA devices based on the base configuration.
@@ -46,7 +47,9 @@ def set_visible_devices(gpus=None, world_size=None, **kwargs):
         assert torch.cuda.is_available, (
                 "Cannot use distributed training without access to GPUs.")
 
-        visible_devices = torch.cuda.device_count()
+        #visible_devices = torch.cuda.device_count()
+        visible_devices = torch.xpu.device_count()
+        print("visible_devices:", visible_devices)
         assert world_size <= visible_devices, (
                  f"The number of GPUs requested ({world_size}) exceeds the "
                  f"number of visible devices ({visible_devices}).")
